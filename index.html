@@ -124,7 +124,7 @@ h2.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,
 <div class="hdr">
   <div class="hdr-title">Chord Player</div>
   <div class="hdr-r">
-    <div class="ctrl-group"><label>BPM</label><input type="number" id="bpm" value="80" min="20" max="300"></div>
+    <div class="ctrl-group"><label>BPM</label><input type="number" id="bpm" value="80" min="20" max="300" style="width:46px"></div>
     <div class="ctrl-group">
       <label>拍子</label>
       <div class="timesig-wrap">
@@ -176,7 +176,7 @@ h2.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,
 
 <!-- PIANO -->
 <div class="piano-section">
-  <div class="piano-lbl">Keyboard — C2 to B6</div>
+  <div class="piano-lbl">Keyboard — C1 to B7</div>
   <div class="piano-wrap" id="piano-wrap"><div class="piano-keys" id="piano-keys"></div></div>
 </div>
 
@@ -240,6 +240,13 @@ function undo(){
 document.getElementById('bpm-dn').addEventListener('click',()=>{const el=document.getElementById('bpm');el.value=Math.max(20,(parseInt(el.value)||80)-1);el.dispatchEvent(new Event('change'));});
 document.getElementById('tsnum-up').addEventListener('click',()=>{const el=document.getElementById('ts-num');el.value=Math.min(16,(parseInt(el.value)||4)+1);el.dispatchEvent(new Event('change'));});
 document.getElementById('tsnum-dn').addEventListener('click',()=>{const el=document.getElementById('ts-num');el.value=Math.max(1,(parseInt(el.value)||4)-1);el.dispatchEvent(new Event('change'));});
+
+// スコア背景タップで複数選択モード解除
+document.getElementById('main').addEventListener('touchend',e=>{
+  if(e.target===scoreEl||e.target===document.getElementById('main')){
+    if(multiSelectMode)exitMultiSelectMode();
+  }
+});
 
 render();updateUndoUI();
 }
@@ -337,7 +344,7 @@ document.addEventListener('keydown',e=>{
 });
 
 // ---- Piano C2-B6 ----
-const P_START=36,P_END=95;
+const P_START=24,P_END=107;
 const WHITE_SEM=[0,2,4,5,7,9,11];
 function buildPiano(){
   pianoKeysEl.innerHTML='';
@@ -455,12 +462,34 @@ function buildEvents(startMi,startSi){
 }
 
 // ---- selection ----
+let multiSelectMode=false;
+let longPressTimer=null;
+
 function setSelected(mi,si,shiftKey){
-  if(shiftKey){
+  if(shiftKey||multiSelectMode){
     if(isMultiSelected(mi,si)){multiSel=multiSel.filter(x=>!(x.mi===mi&&x.si===si));}
     else{if(!isMultiSelected(selectedMi,selectedSi))multiSel.push({mi:selectedMi,si:selectedSi});multiSel.push({mi,si});}
+    if(multiSel.length===0)multiSelectMode=false;
     updateSelInfo();
   }else{clearMultiSel();selectedMi=mi;selectedSi=si;}
+  refreshSelectionUI();
+}
+
+function enterMultiSelectMode(mi,si){
+  multiSelectMode=true;
+  if(!isMultiSelected(mi,si)){
+    if(!isMultiSelected(selectedMi,selectedSi))multiSel.push({mi:selectedMi,si:selectedSi});
+    multiSel.push({mi,si});
+  }
+  updateSelInfo();
+  refreshSelectionUI();
+  // 軽くバイブ（対応デバイスのみ）
+  if(navigator.vibrate) navigator.vibrate(40);
+}
+
+function exitMultiSelectMode(){
+  multiSelectMode=false;
+  clearMultiSel();
   refreshSelectionUI();
 }
 function refreshSelectionUI(){
@@ -514,7 +543,29 @@ function makeBlock(mi,si,mb,measEl){
   inp.addEventListener('mousedown',e=>e.stopPropagation());
   const dl=document.createElement('div');dl.className='dlbl';dl.id=`dl${mi}_${si}`;dl.textContent=`${slot.dur}/${getDen()}`;
   inner.appendChild(inp);inner.appendChild(dl);blk.appendChild(inner);
+  // マウス操作
   blk.addEventListener('mousedown',e=>{if(e.target!==inp)setSelected(mi,si,e.shiftKey);});
+
+  // タッチ操作：長押しで複数選択モード、タップで選択
+  blk.addEventListener('touchstart',e=>{
+    if(e.target===inp||e.target.classList.contains('rhandle')||e.target.classList.contains('cdel'))return;
+    longPressTimer=setTimeout(()=>{
+      longPressTimer=null;
+      enterMultiSelectMode(mi,si);
+    },500);
+  },{passive:true});
+  blk.addEventListener('touchend',e=>{
+    if(e.target===inp||e.target.classList.contains('rhandle')||e.target.classList.contains('cdel'))return;
+    if(longPressTimer){
+      clearTimeout(longPressTimer);longPressTimer=null;
+      // 通常タップ
+      if(multiSelectMode){setSelected(mi,si,true);}
+      else{setSelected(mi,si,false);}
+    }
+  },{passive:true});
+  blk.addEventListener('touchmove',e=>{
+    if(longPressTimer){clearTimeout(longPressTimer);longPressTimer=null;}
+  },{passive:true});
   if(measures[mi].slots.length>1){
     const del=document.createElement('button');del.className='cdel';del.innerHTML='×';
     del.addEventListener('mousedown',e=>e.stopPropagation());
