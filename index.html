@@ -8,40 +8,32 @@
 html,body{height:100%;overflow:hidden}
 body{font-family:'Inter',sans-serif;background:#1a2a3a;color:#e8f0f8;display:flex;flex-direction:column}
 h2.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
-
-/* scrollbar */
 ::-webkit-scrollbar{width:6px;height:6px}
 ::-webkit-scrollbar-track{background:rgba(255,255,255,0.03);border-radius:3px}
 ::-webkit-scrollbar-thumb{background:#2d5a7a;border-radius:3px}
 ::-webkit-scrollbar-thumb:hover{background:#3a7aa0}
 *{scrollbar-width:thin;scrollbar-color:#2d5a7a transparent}
 
-/* HEADER — 演奏系 */
 .hdr{flex-shrink:0;background:#162233;border-bottom:1px solid rgba(255,255,255,0.07);padding:10px 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;z-index:10}
 .hdr-title{font-size:14px;font-weight:600;letter-spacing:0.1em;color:#7ec8e3;text-transform:uppercase}
 .hdr-r{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
-.ctrl-group{display:flex;align-items:center;gap:5px;background:rgba(255,255,255,0.05);border-radius:7px;padding:5px 9px;border:1px solid rgba(255,255,255,0.07)}
+.ctrl-group{display:flex;align-items:center;gap:5px;background:rgba(255,255,255,0.05);border-radius:7px;padding:0 9px;border:1px solid rgba(255,255,255,0.07);height:34px}
 .ctrl-group label{font-size:10px;color:#7ec8e3;letter-spacing:0.07em;text-transform:uppercase;white-space:nowrap}
-.ctrl-group input[type=number]{background:transparent;border:none;color:#e8f0f8;font-size:13px;font-family:'Inter',sans-serif;text-align:center;outline:none;width:36px;-moz-appearance:textfield}
+.ctrl-group input[type=number]{background:transparent;border:none;color:#e8f0f8;font-size:13px;font-family:'Inter',sans-serif;text-align:center;outline:none;width:46px;-moz-appearance:textfield}
 .ctrl-group input[type=number]::-webkit-inner-spin-button,
 .ctrl-group input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
-.spinner{display:flex;flex-direction:column;gap:1px;margin-left:1px}
-.spinner-btn{background:rgba(255,255,255,0.12);border:none;border-radius:3px;width:16px;height:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#e8f0f8;font-size:8px;line-height:1;padding:0;transition:background 0.1s}
-.spinner-btn:hover{background:rgba(255,255,255,0.25)}
-/* プルダウン背景：ctrl-groupと同じ色 */
 .ctrl-group select{background:rgba(255,255,255,0.05);border:none;color:#e8f0f8;font-size:13px;font-family:'Inter',sans-serif;text-align:center;outline:none;cursor:pointer;color-scheme:dark;border-radius:4px;padding:1px 2px}
 .timesig-wrap{display:flex;align-items:center;gap:3px}
-.timesig-input{width:28px;border:none;background:transparent;color:#e8f0f8;font-size:16px;font-weight:600;font-family:'Inter',sans-serif;text-align:center;outline:none;padding:0}
+.timesig-input{width:28px;border:none;background:transparent;color:#e8f0f8;font-size:16px;font-weight:600;font-family:'Inter',sans-serif;text-align:center;outline:none;padding:0;-moz-appearance:textfield}
+.timesig-input::-webkit-inner-spin-button,.timesig-input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
 .timesig-sep{font-size:18px;font-weight:300;color:rgba(126,200,227,0.6);margin:0 1px}
-
-.play-btn{background:#2d7dd2;border:none;border-radius:7px;padding:7px 16px;color:#fff;font-size:12px;font-weight:500;font-family:'Inter',sans-serif;cursor:pointer;display:flex;align-items:center;gap:5px;transition:background 0.15s}
-.play-btn:hover{background:#3a8ee0}
-.play-btn.stop{background:#c0392b}.play-btn.stop:hover{background:#d44}
-.loop-btn{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:7px;padding:7px 12px;color:#e8f0f8;font-size:12px;font-family:'Inter',sans-serif;cursor:pointer;display:flex;align-items:center;gap:5px;transition:all 0.12s}
+.loop-btn{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:7px;padding:0 12px;color:#e8f0f8;font-size:12px;font-family:'Inter',sans-serif;cursor:pointer;display:flex;align-items:center;gap:5px;transition:all 0.12s;height:34px}
 .loop-btn:hover{background:rgba(255,255,255,0.12)}
 .loop-btn.active{background:rgba(126,200,227,0.18);border-color:rgba(126,200,227,0.4);color:#7ec8e3}
+.play-btn{background:#2d7dd2;border:none;border-radius:7px;padding:0 16px;color:#fff;font-size:12px;font-weight:500;font-family:'Inter',sans-serif;cursor:pointer;display:flex;align-items:center;gap:5px;transition:background 0.15s;height:34px}
+.play-btn:hover{background:#3a8ee0}
+.play-btn.stop{background:#c0392b}.play-btn.stop:hover{background:#d44}
 
-/* SCORE */
 .main{flex:1;overflow-y:auto;padding:14px 20px;min-height:0}
 .score{display:flex;flex-direction:column;gap:10px}
 .score-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
@@ -52,11 +44,9 @@ h2.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,
 .del-meas:hover{background:rgba(192,57,43,0.25);color:#ff8080;border-color:rgba(192,57,43,0.4)}
 .measure{position:relative;height:72px;background:#162233;border-radius:9px;border:1px solid rgba(255,255,255,0.07);overflow:hidden}
 .gline{position:absolute;top:0;bottom:0;width:1px;background:rgba(255,255,255,0.06);pointer-events:none;z-index:1}
-
 .cblock{position:absolute;top:5px;bottom:5px;background:#1e3a52;border:1px solid rgba(126,200,227,0.2);border-radius:6px;display:flex;flex-direction:column;align-items:stretch;z-index:2;cursor:pointer;transition:border-color 0.1s,background 0.1s}
 .cblock:hover{border-color:rgba(126,200,227,0.45)}
 .cblock.selected{border-color:#7ec8e3;background:#1e4060;box-shadow:0 0 0 2px rgba(126,200,227,0.25)}
-/* 複数選択：赤紫系に戻す */
 .cblock.multi-selected{border-color:#a78bfa;background:#2a1e52;box-shadow:0 0 0 2px rgba(167,139,250,0.25)}
 .cblock.playing{background:#2d7dd2;border-color:#7ec8e3}
 .cblock.err{border-color:#e74c3c}
@@ -77,20 +67,17 @@ h2.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,
 .add-beat{position:absolute;top:5px;bottom:5px;background:transparent;border:1px dashed rgba(126,200,227,0.18);border-radius:6px;cursor:pointer;color:rgba(126,200,227,0.28);font-size:18px;display:flex;align-items:center;justify-content:center;z-index:2;transition:all 0.12s;font-weight:300}
 .add-beat:hover{background:rgba(126,200,227,0.06);border-color:rgba(126,200,227,0.35);color:rgba(126,200,227,0.6)}
 
-/* EDIT BAR — 編集系 */
 .edit-bar{flex-shrink:0;background:#111e2b;border-top:1px solid rgba(255,255,255,0.07);padding:6px 20px;display:flex;align-items:center;justify-content:flex-end;gap:8px;flex-wrap:wrap}
-.edit-btn{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:6px;padding:5px 11px;color:#e8f0f8;font-size:12px;font-family:'Inter',sans-serif;cursor:pointer;display:flex;align-items:center;gap:4px;transition:all 0.12s;white-space:nowrap}
+.edit-btn{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:6px;padding:0 11px;color:#e8f0f8;font-size:12px;font-family:'Inter',sans-serif;cursor:pointer;display:flex;align-items:center;gap:4px;transition:all 0.12s;white-space:nowrap;height:30px}
 .edit-btn:hover{background:rgba(255,255,255,0.1)}
 .edit-btn:disabled{opacity:0.3;cursor:default}
-/* 複数選択時のコピーボタン：青緑系 */
-.edit-btn.copy-active{border-color:#2dd4a0;color:#2dd4a0;background:rgba(45,212,160,0.1)}
-.edit-btn.paste-ready{border-color:#2dd4a0;color:#2dd4a0}
-.sel-info{font-size:11px;color:#2dd4a0;margin-left:4px}
+.edit-btn.copy-active{border-color:#a78bfa !important;color:#a78bfa !important;background:rgba(167,139,250,0.12) !important}
+.edit-btn.paste-ready{border-color:#a78bfa !important;color:#a78bfa !important;background:rgba(167,139,250,0.08) !important}
+.sel-info{font-size:11px;color:#a78bfa !important;margin-left:4px}
 .edit-sep{width:0.5px;height:18px;background:rgba(255,255,255,0.1);margin:0 2px;flex-shrink:0}
-.add-meas-btn{background:#1e4a6e;border:none;border-radius:6px;padding:5px 12px;color:#fff;font-size:12px;font-weight:500;font-family:'Inter',sans-serif;cursor:pointer;display:flex;align-items:center;gap:4px;transition:background 0.12s}
+.add-meas-btn{background:#1e4a6e;border:none;border-radius:6px;padding:0 12px;color:#fff;font-size:12px;font-weight:500;font-family:'Inter',sans-serif;cursor:pointer;display:flex;align-items:center;gap:4px;transition:background 0.12s;height:30px}
 .add-meas-btn:hover{background:#255a80}
 
-/* PIANO */
 .piano-section{flex-shrink:0;background:#0e1a26;border-top:1px solid rgba(255,255,255,0.06);padding:10px 20px 14px}
 .piano-lbl{font-size:10px;color:rgba(126,200,227,0.45);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px}
 .piano-wrap{position:relative;width:100%;overflow-x:auto;overflow-y:hidden}
@@ -102,7 +89,6 @@ h2.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,
 .bkey{position:absolute;top:0;height:54%;background:#141e28;border-radius:0 0 3px 3px;z-index:3;transition:background 0.07s;border:1px solid rgba(0,0,0,0.5);border-top:none}
 .bkey.lit{background:#2d7dd2}.bkey.lit-jazz{background:#d4820a}
 
-/* MODAL */
 .modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:100;align-items:center;justify-content:center}
 .modal-bg.open{display:flex}
 .modal-box{background:#162233;border:1px solid rgba(126,200,227,0.2);border-radius:12px;padding:20px;width:340px;max-width:90vw;display:flex;flex-direction:column;gap:14px}
@@ -119,12 +105,10 @@ h2.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,
 </head>
 <body>
 <h2 class="sr-only">コード進行再生ツール</h2>
-
-<!-- HEADER：演奏系 -->
 <div class="hdr">
   <div class="hdr-title">Chord Player</div>
   <div class="hdr-r">
-    <div class="ctrl-group"><label>BPM</label><input type="number" id="bpm" value="80" min="20" max="300" style="width:46px"></div>
+    <div class="ctrl-group"><label>BPM</label><input type="number" id="bpm" value="80" min="20" max="300"></div>
     <div class="ctrl-group">
       <label>拍子</label>
       <div class="timesig-wrap">
@@ -157,14 +141,11 @@ h2.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,
   </div>
 </div>
 
-<!-- SCORE -->
 <div class="main" id="main"><div class="score" id="score"></div></div>
 
-<!-- EDIT BAR：編集系 -->
 <div class="edit-bar">
   <button class="edit-btn" id="copy-btn">コピー</button>
   <button class="edit-btn" id="paste-btn" disabled>ペースト</button>
-  <button class="edit-btn" id="desel-btn" style="display:none;border-color:#a78bfa;color:#a78bfa">✕ 選択解除</button>
   <span class="sel-info" id="sel-info"></span>
   <div class="edit-sep"></div>
   <button class="edit-btn" id="undo-btn" disabled>↩ Undo</button>
@@ -175,19 +156,14 @@ h2.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,
   <button class="add-meas-btn" id="add-meas">＋ 小節を追加</button>
 </div>
 
-<!-- PIANO -->
 <div class="piano-section">
   <div class="piano-lbl">Keyboard — C1 to B7</div>
   <div class="piano-wrap" id="piano-wrap"><div class="piano-keys" id="piano-keys"></div></div>
 </div>
 
-<!-- Save/Load modal -->
 <div class="modal-bg" id="modal">
   <div class="modal-box">
-    <div class="modal-hdr">
-      <span class="modal-title">Save / Load</span>
-      <button class="modal-close" id="modal-close">×</button>
-    </div>
+    <div class="modal-hdr"><span class="modal-title">Save / Load</span><button class="modal-close" id="modal-close">×</button></div>
     <div class="modal-actions">
       <button class="modal-btn primary" id="modal-download">💾 保存（ダウンロード）</button>
       <label class="modal-btn" style="cursor:pointer">📂 開く（ファイルを選択）<input type="file" id="modal-file" accept=".json" style="display:none"></label>
@@ -221,6 +197,8 @@ let measures=[{slots:[{chord:'',dur:4}]}];
 let isPlaying=false,loopOn=false,synth=null,reverb=null;
 let selectedMi=0,selectedSi=0;
 let multiSel=[],clipboard=[];
+let multiSelectMode=false;
+let longPressTimer=null;
 
 // ---- undo/redo ----
 const undoStack=[],redoStack=[];
@@ -237,19 +215,7 @@ function undo(){
   if(!undoStack.length)return;
   redoStack.push(JSON.stringify(measures));
   measures=JSON.parse(undoStack.pop());
-  clampSelection();document.getElementById('bpm-up').addEventListener('click',()=>{const el=document.getElementById('bpm');el.value=Math.min(300,(parseInt(el.value)||80)+1);el.dispatchEvent(new Event('change'));});
-document.getElementById('bpm-dn').addEventListener('click',()=>{const el=document.getElementById('bpm');el.value=Math.max(20,(parseInt(el.value)||80)-1);el.dispatchEvent(new Event('change'));});
-document.getElementById('tsnum-up').addEventListener('click',()=>{const el=document.getElementById('ts-num');el.value=Math.min(16,(parseInt(el.value)||4)+1);el.dispatchEvent(new Event('change'));});
-document.getElementById('tsnum-dn').addEventListener('click',()=>{const el=document.getElementById('ts-num');el.value=Math.max(1,(parseInt(el.value)||4)-1);el.dispatchEvent(new Event('change'));});
-
-// スコア背景タップで複数選択モード解除
-document.getElementById('main').addEventListener('touchend',e=>{
-  if(e.target===scoreEl||e.target===document.getElementById('main')){
-    if(multiSelectMode)exitMultiSelectMode();
-  }
-});
-
-render();updateUndoUI();
+  clampSelection();render();updateUndoUI();
 }
 function redo(){
   if(!redoStack.length)return;
@@ -277,6 +243,7 @@ tsNum.addEventListener('change',()=>{snapshot();const n=getNum();measures.forEac
 // ---- multi-select ----
 function isMultiSelected(mi,si){return multiSel.some(x=>x.mi===mi&&x.si===si);}
 function clearMultiSel(){multiSel=[];updateSelInfo();}
+
 function updateSelInfo(){
   const n=multiSel.length;
   selInfo.textContent=n>1?`${n}ブロック選択中`:'';
@@ -288,12 +255,13 @@ function updateSelInfo(){
     copyBtn.style.borderColor='#a78bfa';
     copyBtn.style.color='#a78bfa';
     copyBtn.style.background='rgba(167,139,250,0.12)';
-  } else {
+  }else{
     copyBtn.style.borderColor='';
     copyBtn.style.color='';
     copyBtn.style.background='';
   }
 }
+
 function allSlots(){
   const out=[];
   measures.forEach((m,mi)=>m.slots.forEach((sl,si)=>out.push({mi,si,sl})));
@@ -309,11 +277,11 @@ function doCopy(){
     selInfo.textContent=`${clipboard.length}ブロックをコピー！`;
     selInfo.style.color='#a78bfa';
     pasteBtn.disabled=false;
-    pasteBtn.classList.add('paste-ready');
     pasteBtn.style.borderColor='#a78bfa';
     pasteBtn.style.color='#a78bfa';
   }
 }
+
 function doPaste(){
   if(!clipboard.length)return;
   snapshot();
@@ -331,6 +299,7 @@ function doPaste(){
     }
     if(!inserted){measures.push({slots:[{chord:slot.chord,dur:Math.min(slot.dur,mb)}]});insertMi=measures.length-1;insertSi=0;}
   });
+  exitMultiSelectMode();
   render();
 }
 
@@ -344,7 +313,41 @@ document.addEventListener('keydown',e=>{
   if((e.ctrlKey||e.metaKey)&&e.key==='v'){e.preventDefault();doPaste();}
 });
 
-// ---- Piano C2-B6 ----
+// ---- selection ----
+function setSelected(mi,si,shiftKey){
+  if(shiftKey||multiSelectMode){
+    if(isMultiSelected(mi,si)){multiSel=multiSel.filter(x=>!(x.mi===mi&&x.si===si));}
+    else{if(!isMultiSelected(selectedMi,selectedSi))multiSel.push({mi:selectedMi,si:selectedSi});multiSel.push({mi,si});}
+    if(multiSel.length===0)multiSelectMode=false;
+  }else{clearMultiSel();selectedMi=mi;selectedSi=si;}
+  updateSelInfo();
+  refreshSelectionUI();
+}
+
+function enterMultiSelectMode(mi,si){
+  multiSelectMode=true;
+  if(!isMultiSelected(mi,si)){
+    if(!isMultiSelected(selectedMi,selectedSi))multiSel.push({mi:selectedMi,si:selectedSi});
+    multiSel.push({mi,si});
+  }
+  updateSelInfo();
+  refreshSelectionUI();
+  if(navigator.vibrate)navigator.vibrate(40);
+}
+
+function exitMultiSelectMode(){
+  multiSelectMode=false;
+  clearMultiSel();
+  refreshSelectionUI();
+}
+
+function refreshSelectionUI(){
+  document.querySelectorAll('.cblock.selected,.cblock.multi-selected').forEach(e=>e.classList.remove('selected','multi-selected'));
+  multiSel.forEach(({mi,si})=>document.getElementById(`b${mi}_${si}`)?.classList.add('multi-selected'));
+  if(multiSel.length===0)document.getElementById(`b${selectedMi}_${selectedSi}`)?.classList.add('selected');
+}
+
+// ---- Piano C1-B7 (6 octaves, MIDI 24-107) ----
 const P_START=24,P_END=107;
 const WHITE_SEM=[0,2,4,5,7,9,11];
 function buildPiano(){
@@ -355,8 +358,7 @@ function buildPiano(){
   const idealWW=Math.floor((wrapW-1)/whites.length)-1;
   const WW=Math.max(14,idealWW);
   const BW=Math.round(WW*0.62);
-  const totalW=whites.length*(WW+1);
-  pianoKeysEl.style.width=totalW+'px';
+  pianoKeysEl.style.width=(whites.length*(WW+1))+'px';
   pianoKeysEl.style.height='72px';
   whites.forEach((midi,i)=>{
     const k=document.createElement('div');
@@ -375,6 +377,7 @@ function buildPiano(){
   }
 }
 window.addEventListener('resize',buildPiano);
+
 function litPiano(midis){
   document.querySelectorAll('.wkey.lit,.bkey.lit,.wkey.lit-jazz,.bkey.lit-jazz').forEach(e=>e.classList.remove('lit','lit-jazz'));
   const cls=voicingEl.value==='jazz'?'lit-jazz':'lit';
@@ -403,6 +406,7 @@ function parseChord(raw){
   extraTensions.forEach(t=>{const v=TENSION_IV[t]??TENSION_IV[parseInt(t)];if(v!=null&&!iv.includes(v))iv=[...iv,v];});
   return {rm,iv:[...new Set(iv)].sort((a,b)=>a-b),bassNote};
 }
+
 function getVoiceMidis(parsed,mode){
   if(!parsed)return[];
   const {rm,iv,bassNote}=parsed;
@@ -462,43 +466,6 @@ function buildEvents(startMi,startSi){
   return evs;
 }
 
-// ---- selection ----
-let multiSelectMode=false;
-let longPressTimer=null;
-
-function setSelected(mi,si,shiftKey){
-  if(shiftKey||multiSelectMode){
-    if(isMultiSelected(mi,si)){multiSel=multiSel.filter(x=>!(x.mi===mi&&x.si===si));}
-    else{if(!isMultiSelected(selectedMi,selectedSi))multiSel.push({mi:selectedMi,si:selectedSi});multiSel.push({mi,si});}
-    if(multiSel.length===0)multiSelectMode=false;
-    updateSelInfo();
-  }else{clearMultiSel();selectedMi=mi;selectedSi=si;}
-  refreshSelectionUI();
-}
-
-function enterMultiSelectMode(mi,si){
-  multiSelectMode=true;
-  if(!isMultiSelected(mi,si)){
-    if(!isMultiSelected(selectedMi,selectedSi))multiSel.push({mi:selectedMi,si:selectedSi});
-    multiSel.push({mi,si});
-  }
-  updateSelInfo();
-  refreshSelectionUI();
-  // 軽くバイブ（対応デバイスのみ）
-  if(navigator.vibrate) navigator.vibrate(40);
-}
-
-function exitMultiSelectMode(){
-  multiSelectMode=false;
-  clearMultiSel();
-  refreshSelectionUI();
-}
-function refreshSelectionUI(){
-  document.querySelectorAll('.cblock.selected,.cblock.multi-selected').forEach(e=>e.classList.remove('selected','multi-selected'));
-  multiSel.forEach(({mi,si})=>document.getElementById(`b${mi}_${si}`)?.classList.add('multi-selected'));
-  if(multiSel.length===0)document.getElementById(`b${selectedMi}_${selectedSi}`)?.classList.add('selected');
-}
-
 // ---- render ----
 const COLS=4;
 function render(){
@@ -511,6 +478,7 @@ function render(){
   }
   refreshSelectionUI();
 }
+
 function renderMeasure(mi,mb){
   const wrap=document.createElement('div');wrap.className='mwrap';
   const lbl=document.createElement('div');lbl.className='mlbl';
@@ -527,7 +495,9 @@ function renderMeasure(mi,mb){
   refreshAddBtn(mi,mb,meas);
   return wrap;
 }
+
 function slotLeft(mi,si){return measures[mi].slots.slice(0,si).reduce((s,x)=>s+x.dur,0);}
+
 function makeBlock(mi,si,mb,measEl){
   const slot=measures[mi].slots[si];
   const lb=slotLeft(mi,si);
@@ -544,29 +514,21 @@ function makeBlock(mi,si,mb,measEl){
   inp.addEventListener('mousedown',e=>e.stopPropagation());
   const dl=document.createElement('div');dl.className='dlbl';dl.id=`dl${mi}_${si}`;dl.textContent=`${slot.dur}/${getDen()}`;
   inner.appendChild(inp);inner.appendChild(dl);blk.appendChild(inner);
+
   // マウス操作
   blk.addEventListener('mousedown',e=>{if(e.target!==inp)setSelected(mi,si,e.shiftKey);});
 
-  // タッチ操作：長押しで複数選択モード、タップで選択
+  // タッチ操作：長押しで複数選択モード
   blk.addEventListener('touchstart',e=>{
     if(e.target===inp||e.target.classList.contains('rhandle')||e.target.classList.contains('cdel'))return;
-    longPressTimer=setTimeout(()=>{
-      longPressTimer=null;
-      enterMultiSelectMode(mi,si);
-    },500);
+    longPressTimer=setTimeout(()=>{longPressTimer=null;enterMultiSelectMode(mi,si);},500);
   },{passive:true});
   blk.addEventListener('touchend',e=>{
     if(e.target===inp||e.target.classList.contains('rhandle')||e.target.classList.contains('cdel'))return;
-    if(longPressTimer){
-      clearTimeout(longPressTimer);longPressTimer=null;
-      // 通常タップ
-      if(multiSelectMode){setSelected(mi,si,true);}
-      else{setSelected(mi,si,false);}
-    }
+    if(longPressTimer){clearTimeout(longPressTimer);longPressTimer=null;if(multiSelectMode){setSelected(mi,si,true);}else{setSelected(mi,si,false);}}
   },{passive:true});
-  blk.addEventListener('touchmove',e=>{
-    if(longPressTimer){clearTimeout(longPressTimer);longPressTimer=null;}
-  },{passive:true});
+  blk.addEventListener('touchmove',e=>{if(longPressTimer){clearTimeout(longPressTimer);longPressTimer=null;}},{passive:true});
+
   if(measures[mi].slots.length>1){
     const del=document.createElement('button');del.className='cdel';del.innerHTML='×';
     del.addEventListener('mousedown',e=>e.stopPropagation());
@@ -602,6 +564,7 @@ function makeBlock(mi,si,mb,measEl){
   },{passive:false});
   return blk;
 }
+
 function refreshAddBtn(mi,mb,measEl){
   let ab=measEl.querySelector('.add-beat');
   const used=usedB(mi),free=mb-used;
@@ -695,6 +658,13 @@ document.getElementById('modal-file').addEventListener('change',e=>{
   const reader=new FileReader();
   reader.onload=ev=>{try{loadData(JSON.parse(ev.target.result));modal.classList.remove('open');}catch(e){alert('ファイルの読み込みに失敗しました');}e.target.value='';};
   reader.readAsText(file);
+});
+
+// スコア背景タップで複数選択モード解除
+document.getElementById('main').addEventListener('touchend',e=>{
+  if(e.target===scoreEl||e.target===document.getElementById('main')){
+    if(multiSelectMode)exitMultiSelectMode();
+  }
 });
 
 render();
