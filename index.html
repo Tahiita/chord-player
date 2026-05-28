@@ -73,7 +73,7 @@ h2.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,
 .edit-btn:disabled{opacity:0.3;cursor:default}
 .edit-btn.copy-active{border-color:#a78bfa !important;color:#a78bfa !important;background:rgba(167,139,250,0.12) !important}
 .edit-btn.paste-ready{border-color:#a78bfa !important;color:#a78bfa !important;background:rgba(167,139,250,0.08) !important}
-.sel-info{font-size:11px;color:#a78bfa !important;margin-left:4px}
+.sel-info{font-size:11px;color:#a78bfa;margin-left:4px}
 .edit-sep{width:0.5px;height:18px;background:rgba(255,255,255,0.1);margin:0 2px;flex-shrink:0}
 .add-meas-btn{background:#1e4a6e;border:none;border-radius:6px;padding:0 12px;color:#fff;font-size:12px;font-weight:500;font-family:'Inter',sans-serif;cursor:pointer;display:flex;align-items:center;gap:4px;transition:background 0.12s;height:30px}
 .add-meas-btn:hover{background:#255a80}
@@ -101,10 +101,25 @@ h2.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,
 .modal-btn:hover{background:rgba(255,255,255,0.1)}
 .modal-btn.primary{background:#2d7dd2;border-color:#2d7dd2;color:#fff}
 .modal-btn.primary:hover{background:#3a8ee0}
+
+/* 編集ボタン */
+.edit-pencil{position:absolute;bottom:4px;right:4px;width:20px;height:20px;border-radius:4px;border:1px solid rgba(126,200,227,0.4);background:rgba(126,200,227,0.15);cursor:pointer;font-size:11px;color:#7ec8e3;display:none;align-items:center;justify-content:center;z-index:4;padding:0;line-height:1;transition:background 0.1s}
+.edit-pencil:hover{background:rgba(126,200,227,0.3)}
+.cblock.selected .edit-pencil{display:flex}
+.cblock.multi-selected .edit-pencil{display:none !important}
+/* 入力モード中はブロックを少し明るく */
+.cblock.editing{border-color:#7ec8e3;background:#1e4a62}
+.help-box{background:#162233;border:1px solid rgba(126,200,227,0.2);border-radius:12px;padding:20px;width:560px;max-width:92vw;max-height:80vh;overflow-y:auto;display:flex;flex-direction:column;gap:14px}
+.help-section-title{font-size:11px;color:#7ec8e3;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:6px;padding-bottom:4px;border-bottom:1px solid rgba(126,200,227,0.15)}
+.help-table{width:100%;border-collapse:collapse;font-size:12px;line-height:1.7;color:#c8dde8}
+.help-table td{padding:2px 8px 2px 0;vertical-align:top}
+.help-table td:first-child{color:#7ec8e3;white-space:nowrap;width:160px}
+.help-table tr:hover td{background:rgba(255,255,255,0.03)}
 </style>
 </head>
 <body>
 <h2 class="sr-only">コード進行再生ツール</h2>
+
 <div class="hdr">
   <div class="hdr-title">Chord Player</div>
   <div class="hdr-r">
@@ -152,6 +167,7 @@ h2.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,
   <button class="edit-btn" id="redo-btn" disabled>↪ Redo</button>
   <div class="edit-sep"></div>
   <button class="edit-btn" id="save-btn">💾 Save/Load</button>
+  <button class="edit-btn" id="help-btn">？ Help</button>
   <div class="edit-sep"></div>
   <button class="add-meas-btn" id="add-meas">＋ 小節を追加</button>
 </div>
@@ -161,6 +177,7 @@ h2.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,
   <div class="piano-wrap" id="piano-wrap"><div class="piano-keys" id="piano-keys"></div></div>
 </div>
 
+<!-- Save/Load modal -->
 <div class="modal-bg" id="modal">
   <div class="modal-box">
     <div class="modal-hdr"><span class="modal-title">Save / Load</span><button class="modal-close" id="modal-close">×</button></div>
@@ -168,6 +185,66 @@ h2.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,
       <button class="modal-btn primary" id="modal-download">💾 保存（ダウンロード）</button>
       <label class="modal-btn" style="cursor:pointer">📂 開く（ファイルを選択）<input type="file" id="modal-file" accept=".json" style="display:none"></label>
     </div>
+  </div>
+</div>
+
+<!-- Help modal -->
+<div class="modal-bg" id="help-modal">
+  <div class="help-box">
+    <div class="modal-hdr">
+      <span class="modal-title">コード入力ガイド</span>
+      <button class="modal-close" id="help-close">×</button>
+    </div>
+
+    <div>
+      <div class="help-section-title">表記ゆれ対応</div>
+      <table class="help-table">
+        <tr><td>フラット</td><td>♭ または b（例：B♭m7 = Bbm7）</td></tr>
+        <tr><td>シャープ</td><td>♯ または #（例：F♯m7 = F#m7）</td></tr>
+        <tr><td>メジャー7</td><td>M7 / maj7 / △7 / Δ7（例：CM7 = Cmaj7 = C△7）</td></tr>
+        <tr><td>マイナー</td><td>m / min / -（例：Dm7 = Dmin7 = D-7）</td></tr>
+      </table>
+    </div>
+
+    <div>
+      <div class="help-section-title">基本コード</div>
+      <table class="help-table">
+        <tr><td>C</td><td>メジャートライアド（ド・ミ・ソ）</td></tr>
+        <tr><td>Cm</td><td>マイナートライアド</td></tr>
+        <tr><td>C7</td><td>ドミナント7th</td></tr>
+        <tr><td>CM7</td><td>メジャー7th</td></tr>
+        <tr><td>Cm7</td><td>マイナー7th</td></tr>
+        <tr><td>CmM7</td><td>マイナーメジャー7th</td></tr>
+        <tr><td>Cdim / Cdim7</td><td>ディミニッシュ / ディミニッシュ7th</td></tr>
+        <tr><td>Cm7b5 / Cø</td><td>ハーフディミニッシュ</td></tr>
+        <tr><td>Caug / C+</td><td>オーギュメント</td></tr>
+        <tr><td>Csus2 / Csus4</td><td>サスペンデッド</td></tr>
+        <tr><td>C7sus4 / C9sus4</td><td>7th・9thサスフォー</td></tr>
+        <tr><td>C6 / Cm6</td><td>6th</td></tr>
+      </table>
+    </div>
+
+    <div>
+      <div class="help-section-title">テンションコード</div>
+      <table class="help-table">
+        <tr><td>C9 / CM9 / Cm9</td><td>9thコード</td></tr>
+        <tr><td>C11 / Cm11</td><td>11thコード</td></tr>
+        <tr><td>C13 / CM13 / Cm13</td><td>13thコード</td></tr>
+        <tr><td>CM7(9,11,13)</td><td>カッコ内にテンションを列挙</td></tr>
+        <tr><td>CM7(b9) / CM7(#11)</td><td>変化テンション</td></tr>
+        <tr><td>Cadd9</td><td>7thなしで9thを追加</td></tr>
+      </table>
+    </div>
+
+    <div>
+      <div class="help-section-title">分数コード（スラッシュコード）</div>
+      <table class="help-table">
+        <tr><td>C/E</td><td>Cコード・ベース音E（第1転回形）</td></tr>
+        <tr><td>G/B</td><td>Gコード・ベース音B（第1転回形）</td></tr>
+        <tr><td>Am7/G</td><td>テンション付き分数コードも可</td></tr>
+      </table>
+    </div>
+
   </div>
 </div>
 
@@ -207,22 +284,9 @@ function snapshot(){
   if(undoStack.length>100)undoStack.shift();
   redoStack.length=0;updateUndoUI();
 }
-function updateUndoUI(){
-  undoBtn.disabled=undoStack.length===0;
-  redoBtn.disabled=redoStack.length===0;
-}
-function undo(){
-  if(!undoStack.length)return;
-  redoStack.push(JSON.stringify(measures));
-  measures=JSON.parse(undoStack.pop());
-  clampSelection();render();updateUndoUI();
-}
-function redo(){
-  if(!redoStack.length)return;
-  undoStack.push(JSON.stringify(measures));
-  measures=JSON.parse(redoStack.pop());
-  clampSelection();render();updateUndoUI();
-}
+function updateUndoUI(){undoBtn.disabled=undoStack.length===0;redoBtn.disabled=redoStack.length===0;}
+function undo(){if(!undoStack.length)return;redoStack.push(JSON.stringify(measures));measures=JSON.parse(undoStack.pop());clampSelection();render();updateUndoUI();}
+function redo(){if(!redoStack.length)return;undoStack.push(JSON.stringify(measures));measures=JSON.parse(redoStack.pop());clampSelection();render();updateUndoUI();}
 function clampSelection(){
   if(selectedMi>=measures.length)selectedMi=measures.length-1;
   if(selectedSi>=measures[selectedMi].slots.length)selectedSi=Math.max(0,measures[selectedMi].slots.length-1);
@@ -243,7 +307,6 @@ tsNum.addEventListener('change',()=>{snapshot();const n=getNum();measures.forEac
 // ---- multi-select ----
 function isMultiSelected(mi,si){return multiSel.some(x=>x.mi===mi&&x.si===si);}
 function clearMultiSel(){multiSel=[];updateSelInfo();}
-
 function updateSelInfo(){
   const n=multiSel.length;
   selInfo.textContent=n>1?`${n}ブロック選択中`:'';
@@ -251,22 +314,10 @@ function updateSelInfo(){
   const active=n>1;
   copyBtn.classList.toggle('copy-active',active);
   copyBtn.textContent=n>1?`コピー(${n})`:'コピー';
-  if(active){
-    copyBtn.style.borderColor='#a78bfa';
-    copyBtn.style.color='#a78bfa';
-    copyBtn.style.background='rgba(167,139,250,0.12)';
-  }else{
-    copyBtn.style.borderColor='';
-    copyBtn.style.color='';
-    copyBtn.style.background='';
-  }
+  if(active){copyBtn.style.borderColor='#a78bfa';copyBtn.style.color='#a78bfa';copyBtn.style.background='rgba(167,139,250,0.12)';}
+  else{copyBtn.style.borderColor='';copyBtn.style.color='';copyBtn.style.background='';}
 }
-
-function allSlots(){
-  const out=[];
-  measures.forEach((m,mi)=>m.slots.forEach((sl,si)=>out.push({mi,si,sl})));
-  return out;
-}
+function allSlots(){const out=[];measures.forEach((m,mi)=>m.slots.forEach((sl,si)=>out.push({mi,si,sl})));return out;}
 
 // ---- copy/paste ----
 function doCopy(){
@@ -281,7 +332,6 @@ function doCopy(){
     pasteBtn.style.color='#a78bfa';
   }
 }
-
 function doPaste(){
   if(!clipboard.length)return;
   snapshot();
@@ -302,10 +352,8 @@ function doPaste(){
   exitMultiSelectMode();
   render();
 }
-
 copyBtn.addEventListener('click',doCopy);
 pasteBtn.addEventListener('click',doPaste);
-
 document.addEventListener('keydown',e=>{
   if((e.ctrlKey||e.metaKey)&&e.key==='z'){e.preventDefault();undo();}
   if((e.ctrlKey||e.metaKey)&&(e.key==='y'||(e.shiftKey&&e.key==='z'))){e.preventDefault();redo();}
@@ -320,34 +368,22 @@ function setSelected(mi,si,shiftKey){
     else{if(!isMultiSelected(selectedMi,selectedSi))multiSel.push({mi:selectedMi,si:selectedSi});multiSel.push({mi,si});}
     if(multiSel.length===0)multiSelectMode=false;
   }else{clearMultiSel();selectedMi=mi;selectedSi=si;}
-  updateSelInfo();
-  refreshSelectionUI();
+  updateSelInfo();refreshSelectionUI();
 }
-
 function enterMultiSelectMode(mi,si){
   multiSelectMode=true;
-  if(!isMultiSelected(mi,si)){
-    if(!isMultiSelected(selectedMi,selectedSi))multiSel.push({mi:selectedMi,si:selectedSi});
-    multiSel.push({mi,si});
-  }
-  updateSelInfo();
-  refreshSelectionUI();
+  if(!isMultiSelected(mi,si)){if(!isMultiSelected(selectedMi,selectedSi))multiSel.push({mi:selectedMi,si:selectedSi});multiSel.push({mi,si});}
+  updateSelInfo();refreshSelectionUI();
   if(navigator.vibrate)navigator.vibrate(40);
 }
-
-function exitMultiSelectMode(){
-  multiSelectMode=false;
-  clearMultiSel();
-  refreshSelectionUI();
-}
-
+function exitMultiSelectMode(){multiSelectMode=false;clearMultiSel();refreshSelectionUI();}
 function refreshSelectionUI(){
   document.querySelectorAll('.cblock.selected,.cblock.multi-selected').forEach(e=>e.classList.remove('selected','multi-selected'));
   multiSel.forEach(({mi,si})=>document.getElementById(`b${mi}_${si}`)?.classList.add('multi-selected'));
   if(multiSel.length===0)document.getElementById(`b${selectedMi}_${selectedSi}`)?.classList.add('selected');
 }
 
-// ---- Piano C1-B7 (6 octaves, MIDI 24-107) ----
+// ---- Piano ----
 const P_START=24,P_END=107;
 const WHITE_SEM=[0,2,4,5,7,9,11];
 function buildPiano(){
@@ -355,29 +391,25 @@ function buildPiano(){
   const whites=[];
   for(let m=P_START;m<=P_END;m++)if(WHITE_SEM.includes(m%12))whites.push(m);
   const wrapW=pianoWrap.getBoundingClientRect().width||640;
-  const idealWW=Math.floor((wrapW-1)/whites.length)-1;
-  const WW=Math.max(14,idealWW);
+  const WW=Math.max(14,Math.floor((wrapW-1)/whites.length)-1);
   const BW=Math.round(WW*0.62);
   pianoKeysEl.style.width=(whites.length*(WW+1))+'px';
   pianoKeysEl.style.height='72px';
   whites.forEach((midi,i)=>{
-    const k=document.createElement('div');
-    k.className='wkey';k.id=`wk${midi}`;
+    const k=document.createElement('div');k.className='wkey';k.id=`wk${midi}`;
     k.style.left=(i*(WW+1))+'px';k.style.width=WW+'px';
     if(midi%12===0){const lbl=document.createElement('div');lbl.className='wkey-lbl';lbl.textContent='C'+(Math.floor(midi/12)-1);k.appendChild(lbl);}
     pianoKeysEl.appendChild(k);
   });
   let wi=0;
   for(let m=P_START;m<=P_END;m++){
-    const sem=m%12;
-    if(WHITE_SEM.includes(sem)){wi++;continue;}
+    const sem=m%12;if(WHITE_SEM.includes(sem)){wi++;continue;}
     const k=document.createElement('div');k.className='bkey';k.id=`bk${m}`;
     k.style.width=BW+'px';k.style.left=((wi-1)*(WW+1)+WW*0.65)+'px';
     pianoKeysEl.appendChild(k);
   }
 }
 window.addEventListener('resize',buildPiano);
-
 function litPiano(midis){
   document.querySelectorAll('.wkey.lit,.bkey.lit,.wkey.lit-jazz,.bkey.lit-jazz').forEach(e=>e.classList.remove('lit','lit-jazz'));
   const cls=voicingEl.value==='jazz'?'lit-jazz':'lit';
@@ -400,13 +432,12 @@ function parseChord(raw){
   for(const k of ['C#','Db','D#','Eb','F#','Gb','G#','Ab','A#','Bb','C','D','E','F','G','A','B'])if(s.startsWith(k)){root=k;rest=s.slice(k.length);break;}
   if(!root)return null;
   const rm=NM[root]+60;
-  const tbl={'':[ 0,4,7],'M':[0,4,7],'m':[0,3,7],'-':[0,3,7],'7':[0,4,7,10],'M7':[0,4,7,11],'m7':[0,3,7,10],'-7':[0,3,7,10],'mM7':[0,3,7,11],'-M7':[0,3,7,11],'dim':[0,3,6],'dim7':[0,3,6,9],'o':[0,3,6],'o7':[0,3,6,9],'m7b5':[0,3,6,10],'-7b5':[0,3,6,10],'ø':[0,3,6,10],'ø7':[0,3,6,10],'aug':[0,4,8],'+':[0,4,8],'aug7':[0,4,8,10],'+7':[0,4,8,10],'sus2':[0,2,7],'sus4':[0,5,7],'add9':[0,4,7,14],'add11':[0,4,7,17],'add13':[0,4,7,21],'6':[0,4,7,9],'m6':[0,3,7,9],'9':[0,4,7,10,14],'M9':[0,4,7,11,14],'m9':[0,3,7,10,14],'11':[0,4,7,10,14,17],'m11':[0,3,7,10,14,17],'13':[0,4,7,10,14,17,21],'M13':[0,4,7,11,14,17,21],'m13':[0,3,7,10,14,17,21]};
+  const tbl={'':[ 0,4,7],'M':[0,4,7],'m':[0,3,7],'-':[0,3,7],'7':[0,4,7,10],'M7':[0,4,7,11],'m7':[0,3,7,10],'-7':[0,3,7,10],'mM7':[0,3,7,11],'-M7':[0,3,7,11],'dim':[0,3,6],'dim7':[0,3,6,9],'o':[0,3,6],'o7':[0,3,6,9],'m7b5':[0,3,6,10],'-7b5':[0,3,6,10],'ø':[0,3,6,10],'ø7':[0,3,6,10],'aug':[0,4,8],'+':[0,4,8],'aug7':[0,4,8,10],'+7':[0,4,8,10],'sus2':[0,2,7],'sus4':[0,5,7],'7sus4':[0,5,7,10],'9sus4':[0,5,7,10,14],'13sus4':[0,5,7,10,14,21],'add9':[0,4,7,14],'add11':[0,4,7,17],'add13':[0,4,7,21],'6':[0,4,7,9],'m6':[0,3,7,9],'9':[0,4,7,10,14],'M9':[0,4,7,11,14],'m9':[0,3,7,10,14],'11':[0,4,7,10,14,17],'m11':[0,3,7,10,14,17],'13':[0,4,7,10,14,17,21],'M13':[0,4,7,11,14,17,21],'m13':[0,3,7,10,14,17,21]};
   let iv=tbl[rest];
   if(!iv){const ap=[];let r2=rest;const ar=/add(b?#?\d+)/gi;let am;while((am=ar.exec(r2))!==null)ap.push(am[1]);r2=r2.replace(/add(b?#?\d+)/gi,'');iv=tbl[r2]||[0,4,7];ap.forEach(t=>{const v=TENSION_IV[t];if(v&&!iv.includes(v))iv=[...iv,v];});}
   extraTensions.forEach(t=>{const v=TENSION_IV[t]??TENSION_IV[parseInt(t)];if(v!=null&&!iv.includes(v))iv=[...iv,v];});
   return {rm,iv:[...new Set(iv)].sort((a,b)=>a-b),bassNote};
 }
-
 function getVoiceMidis(parsed,mode){
   if(!parsed)return[];
   const {rm,iv,bassNote}=parsed;
@@ -478,7 +509,6 @@ function render(){
   }
   refreshSelectionUI();
 }
-
 function renderMeasure(mi,mb){
   const wrap=document.createElement('div');wrap.className='mwrap';
   const lbl=document.createElement('div');lbl.className='mlbl';
@@ -495,9 +525,7 @@ function renderMeasure(mi,mb){
   refreshAddBtn(mi,mb,meas);
   return wrap;
 }
-
 function slotLeft(mi,si){return measures[mi].slots.slice(0,si).reduce((s,x)=>s+x.dur,0);}
-
 function makeBlock(mi,si,mb,measEl){
   const slot=measures[mi].slots[si];
   const lb=slotLeft(mi,si);
@@ -509,26 +537,47 @@ function makeBlock(mi,si,mb,measEl){
   const inner=document.createElement('div');inner.className='cinner';
   const inp=document.createElement('input');
   inp.type='text';inp.className='cinp';inp.placeholder='C';inp.value=slot.chord||'';
+  // inputは直接タップ不可（✎ボタン経由のみ）
+  inp.readOnly=true;
+  inp.style.cursor='default';
   inp.addEventListener('input',e=>{measures[mi].slots[si].chord=e.target.value;blk.classList.toggle('err',e.target.value.trim()!==''&&!parseChord(e.target.value));});
   inp.addEventListener('change',()=>snapshot());
   inp.addEventListener('mousedown',e=>e.stopPropagation());
+  inp.addEventListener('blur',()=>{
+    inp.readOnly=true;
+    inp.style.cursor='default';
+    blk.classList.remove('editing');
+  });
   const dl=document.createElement('div');dl.className='dlbl';dl.id=`dl${mi}_${si}`;dl.textContent=`${slot.dur}/${getDen()}`;
   inner.appendChild(inp);inner.appendChild(dl);blk.appendChild(inner);
 
-  // マウス操作
+  // 編集ボタン（✎）
+  const pencil=document.createElement('button');
+  pencil.className='edit-pencil';
+  pencil.innerHTML='✎';
+  pencil.title='コードを編集';
+  pencil.addEventListener('mousedown',e=>e.stopPropagation());
+  pencil.addEventListener('touchstart',e=>e.stopPropagation(),{passive:true});
+  pencil.addEventListener('click',e=>{
+    e.stopPropagation();
+    if(multiSelectMode)return;
+    inp.readOnly=false;
+    inp.style.cursor='text';
+    blk.classList.add('editing');
+    inp.focus();
+    inp.select();
+  });
+  blk.appendChild(pencil);
   blk.addEventListener('mousedown',e=>{if(e.target!==inp)setSelected(mi,si,e.shiftKey);});
-
-  // タッチ操作：長押しで複数選択モード
   blk.addEventListener('touchstart',e=>{
     if(e.target===inp||e.target.classList.contains('rhandle')||e.target.classList.contains('cdel'))return;
     longPressTimer=setTimeout(()=>{longPressTimer=null;enterMultiSelectMode(mi,si);},500);
   },{passive:true});
   blk.addEventListener('touchend',e=>{
     if(e.target===inp||e.target.classList.contains('rhandle')||e.target.classList.contains('cdel'))return;
-    if(longPressTimer){clearTimeout(longPressTimer);longPressTimer=null;if(multiSelectMode){setSelected(mi,si,true);}else{setSelected(mi,si,false);}}
+    if(longPressTimer){clearTimeout(longPressTimer);longPressTimer=null;if(multiSelectMode)setSelected(mi,si,true);else setSelected(mi,si,false);}
   },{passive:true});
-  blk.addEventListener('touchmove',e=>{if(longPressTimer){clearTimeout(longPressTimer);longPressTimer=null;}},{passive:true});
-
+  blk.addEventListener('touchmove',()=>{if(longPressTimer){clearTimeout(longPressTimer);longPressTimer=null;}},{passive:true});
   if(measures[mi].slots.length>1){
     const del=document.createElement('button');del.className='cdel';del.innerHTML='×';
     del.addEventListener('mousedown',e=>e.stopPropagation());
@@ -564,7 +613,6 @@ function makeBlock(mi,si,mb,measEl){
   },{passive:false});
   return blk;
 }
-
 function refreshAddBtn(mi,mb,measEl){
   let ab=measEl.querySelector('.add-beat');
   const used=usedB(mi),free=mb-used;
@@ -573,47 +621,30 @@ function refreshAddBtn(mi,mb,measEl){
   ab.style.left=`${(used/mb)*100}%`;ab.style.width=`calc(${(free/mb)*100}% - 3px)`;
   ab.onclick=()=>{snapshot();const u=usedB(mi),f=maxB()-u;if(f<=0)return;measures[mi].slots.push({chord:'',dur:f});render();setTimeout(()=>{const all=document.querySelectorAll(`#m${mi} .cinp`);if(all.length)all[all.length-1].focus();},30);};
 }
-
 document.getElementById('add-meas').addEventListener('click',()=>{
   snapshot();
-  const mb=maxB();
-  measures.splice(selectedMi+1,0,{slots:[{chord:'',dur:mb}]});
+  measures.splice(selectedMi+1,0,{slots:[{chord:'',dur:maxB()}]});
   selectedMi=selectedMi+1;selectedSi=0;
   render();
   setTimeout(()=>document.getElementById(`m${selectedMi}`)?.scrollIntoView({behavior:'smooth',block:'nearest'}),50);
 });
 
 // ---- playback ----
-function clearPlay(){
-  document.querySelectorAll('.cblock.playing').forEach(e=>e.classList.remove('playing'));
-  document.querySelectorAll('.cinp.playing,.dlbl.playing').forEach(e=>e.classList.remove('playing'));
-}
-function scrollToBlock(mi,si){
-  document.getElementById(`b${mi}_${si}`)?.scrollIntoView({behavior:'smooth',block:'nearest'});
-}
+function clearPlay(){document.querySelectorAll('.cblock.playing').forEach(e=>e.classList.remove('playing'));document.querySelectorAll('.cinp.playing,.dlbl.playing').forEach(e=>e.classList.remove('playing'));}
+function scrollToBlock(mi,si){document.getElementById(`b${mi}_${si}`)?.scrollIntoView({behavior:'smooth',block:'nearest'});}
 function schedulePlay(transportOffset){
   const evs=buildEvents(selectedMi,selectedSi);
   if(!evs.length)return;
   const total=evs[evs.length-1].time+evs[evs.length-1].dur;
   evs.forEach(ev=>{
     Tone.Transport.schedule(time=>{
-      if(ev.isFirst){
-        clearPlay();
-        const blk=document.getElementById(`b${ev.mi}_${ev.si}`);
-        blk?.classList.add('playing');
-        blk?.querySelector('.cinp')?.classList.add('playing');
-        blk?.querySelector('.dlbl')?.classList.add('playing');
-        Tone.getDraw().schedule(()=>scrollToBlock(ev.mi,ev.si),time);
-      }
+      if(ev.isFirst){clearPlay();const blk=document.getElementById(`b${ev.mi}_${ev.si}`);blk?.classList.add('playing');blk?.querySelector('.cinp')?.classList.add('playing');blk?.querySelector('.dlbl')?.classList.add('playing');Tone.getDraw().schedule(()=>scrollToBlock(ev.mi,ev.si),time);}
       Tone.getDraw().schedule(()=>litPiano(ev.lit||[]),time);
       if(ev.notes.length)synth.triggerAttackRelease(ev.notes,ev.dur,time);
     },ev.time+transportOffset);
   });
-  if(loopOn){
-    Tone.Transport.schedule(()=>schedulePlay(transportOffset+total),transportOffset+total-0.05);
-  }else{
-    Tone.Transport.schedule(()=>stopPlay(),transportOffset+total+0.05);
-  }
+  if(loopOn){Tone.Transport.schedule(()=>schedulePlay(transportOffset+total),transportOffset+total-0.05);}
+  else{Tone.Transport.schedule(()=>stopPlay(),transportOffset+total+0.05);}
 }
 async function startPlay(){
   await Tone.start();buildSynth();
@@ -630,9 +661,7 @@ function stopPlay(){
 playBtn.addEventListener('click',()=>isPlaying?stopPlay():startPlay());
 
 // ---- Save/Load ----
-function getJson(){
-  return JSON.stringify({version:2,bpm:parseInt(bpmEl.value)||80,tsNum:getNum(),tsDen:getDen(),timbre:timbreEl.value,voicing:voicingEl.value,style:styleEl.value,measures:measures.map(m=>({slots:m.slots.map(s=>({chord:s.chord,dur:s.dur}))}))},null,2);
-}
+function getJson(){return JSON.stringify({version:2,bpm:parseInt(bpmEl.value)||80,tsNum:getNum(),tsDen:getDen(),timbre:timbreEl.value,voicing:voicingEl.value,style:styleEl.value,measures:measures.map(m=>({slots:m.slots.map(s=>({chord:s.chord,dur:s.dur}))}))},null,2);}
 function loadData(data){
   if(data.bpm)bpmEl.value=data.bpm;
   if(data.tsNum)tsNum.value=data.tsNum;
@@ -660,11 +689,15 @@ document.getElementById('modal-file').addEventListener('change',e=>{
   reader.readAsText(file);
 });
 
-// スコア背景タップで複数選択モード解除
+// ---- Help ----
+const helpModal=document.getElementById('help-modal');
+document.getElementById('help-btn').addEventListener('click',()=>helpModal.classList.add('open'));
+document.getElementById('help-close').addEventListener('click',()=>helpModal.classList.remove('open'));
+helpModal.addEventListener('click',e=>{if(e.target===helpModal)helpModal.classList.remove('open');});
+
+// ---- touch deselect ----
 document.getElementById('main').addEventListener('touchend',e=>{
-  if(e.target===scoreEl||e.target===document.getElementById('main')){
-    if(multiSelectMode)exitMultiSelectMode();
-  }
+  if(e.target===scoreEl||e.target===document.getElementById('main')){if(multiSelectMode)exitMultiSelectMode();}
 });
 
 render();
