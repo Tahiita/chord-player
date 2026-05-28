@@ -182,8 +182,11 @@ h2.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,
   <div class="modal-box">
     <div class="modal-hdr"><span class="modal-title">Save / Load</span><button class="modal-close" id="modal-close">×</button></div>
     <div class="modal-actions">
-      <button class="modal-btn primary" id="modal-download">💾 保存（ダウンロード）</button>
       <label class="modal-btn" style="cursor:pointer">📂 開く（ファイルを選択）<input type="file" id="modal-file" accept=".json" style="display:none"></label>
+      <button class="modal-btn primary" id="modal-download">💾 保存する（.jsonファイル）</button>
+      <div id="modal-retry" style="display:none;font-size:12px;color:rgba(126,200,227,0.7);padding:6px 4px">
+        ⚠ ブロックされました。<button id="modal-retry-btn" style="background:transparent;border:none;color:#7ec8e3;cursor:pointer;font-size:12px;text-decoration:underline;padding:0 4px">もう一度試す</button>
+      </div>
     </div>
   </div>
 </div>
@@ -570,12 +573,16 @@ function makeBlock(mi,si,mb,measEl){
   blk.appendChild(pencil);
   blk.addEventListener('mousedown',e=>{if(e.target!==inp)setSelected(mi,si,e.shiftKey);});
   blk.addEventListener('touchstart',e=>{
-    if(e.target===inp||e.target.classList.contains('rhandle')||e.target.classList.contains('cdel'))return;
+    if(e.target===inp||e.target.classList.contains('rhandle')||e.target.classList.contains('cdel')||e.target.classList.contains('edit-pencil'))return;
     longPressTimer=setTimeout(()=>{longPressTimer=null;enterMultiSelectMode(mi,si);},500);
   },{passive:true});
   blk.addEventListener('touchend',e=>{
-    if(e.target===inp||e.target.classList.contains('rhandle')||e.target.classList.contains('cdel'))return;
-    if(longPressTimer){clearTimeout(longPressTimer);longPressTimer=null;if(multiSelectMode)setSelected(mi,si,true);else setSelected(mi,si,false);}
+    if(e.target===inp||e.target.classList.contains('rhandle')||e.target.classList.contains('cdel')||e.target.classList.contains('edit-pencil'))return;
+    if(longPressTimer){
+      clearTimeout(longPressTimer);longPressTimer=null;
+      // multiSelectMode中はタップ=追加選択、それ以外は通常選択
+      setSelected(mi,si,multiSelectMode);
+    }
   },{passive:true});
   blk.addEventListener('touchmove',()=>{if(longPressTimer){clearTimeout(longPressTimer);longPressTimer=null;}},{passive:true});
   if(measures[mi].slots.length>1){
@@ -677,11 +684,25 @@ const modal=document.getElementById('modal');
 document.getElementById('save-btn').addEventListener('click',()=>modal.classList.add('open'));
 document.getElementById('modal-close').addEventListener('click',()=>modal.classList.remove('open'));
 modal.addEventListener('click',e=>{if(e.target===modal)modal.classList.remove('open');});
-document.getElementById('modal-download').addEventListener('click',()=>{
+let lastBlobUrl=null;
+function doDownload(){
+  if(lastBlobUrl)URL.revokeObjectURL(lastBlobUrl);
   const blob=new Blob([getJson()],{type:'application/json'});
-  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='chord-sequence.json';a.click();URL.revokeObjectURL(a.href);
-  modal.classList.remove('open');
+  lastBlobUrl=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=lastBlobUrl;a.download='chord-sequence.json';
+  document.body.appendChild(a);a.click();document.body.removeChild(a);
+  const retryEl=document.getElementById('modal-retry');
+  // 少し待ってブロックされてたら「もう一度試す」を表示
+  setTimeout(()=>{
+    try{if(lastBlobUrl)retryEl.style.display='block';}catch(e){}
+  },500);
+}
+document.getElementById('modal-download').addEventListener('click',()=>{
+  document.getElementById('modal-retry').style.display='none';
+  doDownload();
 });
+document.getElementById('modal-retry-btn').addEventListener('click',()=>doDownload());
 document.getElementById('modal-file').addEventListener('change',e=>{
   const file=e.target.files[0];if(!file)return;
   const reader=new FileReader();
