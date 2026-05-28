@@ -49,6 +49,7 @@ h2.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,
 .cblock.selected{border-color:#7ec8e3;background:#1e4060;box-shadow:0 0 0 2px rgba(126,200,227,0.25)}
 .cblock.multi-selected{border-color:#a78bfa;background:#2a1e52;box-shadow:0 0 0 2px rgba(167,139,250,0.25)}
 .cblock.playing{background:#2d7dd2;border-color:#7ec8e3}
+.cblock.editing{border-color:#7ec8e3;background:#1e4a62}
 .cblock.err{border-color:#e74c3c}
 .start-marker{position:absolute;top:4px;left:4px;font-size:9px;color:#7ec8e3;opacity:0;pointer-events:none;letter-spacing:0.04em;font-family:'Inter',sans-serif}
 .cblock.selected .start-marker{opacity:1}
@@ -64,6 +65,10 @@ h2.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,
 .cdel{position:absolute;top:3px;right:11px;width:14px;height:14px;border-radius:50%;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.04);cursor:pointer;font-size:9px;color:rgba(255,255,255,0.35);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity 0.12s;z-index:4;padding:0;line-height:1}
 .cblock:hover .cdel{opacity:1}
 .cdel:hover{background:rgba(192,57,43,0.35);color:#ff8080}
+.edit-pencil{position:absolute;bottom:4px;right:4px;width:20px;height:20px;border-radius:4px;border:1px solid rgba(126,200,227,0.4);background:rgba(126,200,227,0.15);cursor:pointer;font-size:11px;color:#7ec8e3;display:none;align-items:center;justify-content:center;z-index:4;padding:0;line-height:1;transition:background 0.1s}
+.edit-pencil:hover{background:rgba(126,200,227,0.3)}
+.cblock.selected .edit-pencil{display:flex}
+.cblock.multi-selected .edit-pencil{display:none!important}
 .add-beat{position:absolute;top:5px;bottom:5px;background:transparent;border:1px dashed rgba(126,200,227,0.18);border-radius:6px;cursor:pointer;color:rgba(126,200,227,0.28);font-size:18px;display:flex;align-items:center;justify-content:center;z-index:2;transition:all 0.12s;font-weight:300}
 .add-beat:hover{background:rgba(126,200,227,0.06);border-color:rgba(126,200,227,0.35);color:rgba(126,200,227,0.6)}
 
@@ -71,8 +76,7 @@ h2.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,
 .edit-btn{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:6px;padding:0 11px;color:#e8f0f8;font-size:12px;font-family:'Inter',sans-serif;cursor:pointer;display:flex;align-items:center;gap:4px;transition:all 0.12s;white-space:nowrap;height:30px}
 .edit-btn:hover{background:rgba(255,255,255,0.1)}
 .edit-btn:disabled{opacity:0.3;cursor:default}
-.edit-btn.copy-active{border-color:#a78bfa !important;color:#a78bfa !important;background:rgba(167,139,250,0.12) !important}
-.edit-btn.paste-ready{border-color:#a78bfa !important;color:#a78bfa !important;background:rgba(167,139,250,0.08) !important}
+.edit-btn.copy-active{border-color:#a78bfa!important;color:#a78bfa!important;background:rgba(167,139,250,0.12)!important}
 .sel-info{font-size:11px;color:#a78bfa;margin-left:4px}
 .edit-sep{width:0.5px;height:18px;background:rgba(255,255,255,0.1);margin:0 2px;flex-shrink:0}
 .add-meas-btn{background:#1e4a6e;border:none;border-radius:6px;padding:0 12px;color:#fff;font-size:12px;font-weight:500;font-family:'Inter',sans-serif;cursor:pointer;display:flex;align-items:center;gap:4px;transition:background 0.12s;height:30px}
@@ -101,14 +105,6 @@ h2.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,
 .modal-btn:hover{background:rgba(255,255,255,0.1)}
 .modal-btn.primary{background:#2d7dd2;border-color:#2d7dd2;color:#fff}
 .modal-btn.primary:hover{background:#3a8ee0}
-
-/* 編集ボタン */
-.edit-pencil{position:absolute;bottom:4px;right:4px;width:20px;height:20px;border-radius:4px;border:1px solid rgba(126,200,227,0.4);background:rgba(126,200,227,0.15);cursor:pointer;font-size:11px;color:#7ec8e3;display:none;align-items:center;justify-content:center;z-index:4;padding:0;line-height:1;transition:background 0.1s}
-.edit-pencil:hover{background:rgba(126,200,227,0.3)}
-.cblock.selected .edit-pencil{display:flex}
-.cblock.multi-selected .edit-pencil{display:none !important}
-/* 入力モード中はブロックを少し明るく */
-.cblock.editing{border-color:#7ec8e3;background:#1e4a62}
 .help-box{background:#162233;border:1px solid rgba(126,200,227,0.2);border-radius:12px;padding:20px;width:560px;max-width:92vw;max-height:80vh;overflow-y:auto;display:flex;flex-direction:column;gap:14px}
 .help-section-title{font-size:11px;color:#7ec8e3;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:6px;padding-bottom:4px;border-bottom:1px solid rgba(126,200,227,0.15)}
 .help-table{width:100%;border-collapse:collapse;font-size:12px;line-height:1.7;color:#c8dde8}
@@ -166,8 +162,9 @@ h2.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,
   <button class="edit-btn" id="undo-btn" disabled>↩ Undo</button>
   <button class="edit-btn" id="redo-btn" disabled>↪ Redo</button>
   <div class="edit-sep"></div>
-  <button class="edit-btn" id="save-btn">💾 Save/Load</button>
-  <button class="edit-btn" id="help-btn">？ Help</button>
+  <button class="edit-btn" id="save-btn">Load/Save</button>
+  <button class="edit-btn" id="chord-guide-btn">🎵 コード表記</button>
+  <button class="edit-btn" id="help-btn">📘 ガイド</button>
   <div class="edit-sep"></div>
   <button class="add-meas-btn" id="add-meas">＋ 小節を追加</button>
 </div>
@@ -180,7 +177,7 @@ h2.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,
 <!-- Save/Load modal -->
 <div class="modal-bg" id="modal">
   <div class="modal-box">
-    <div class="modal-hdr"><span class="modal-title">Save / Load</span><button class="modal-close" id="modal-close">×</button></div>
+    <div class="modal-hdr"><span class="modal-title">Load / Save</span><button class="modal-close" id="modal-close">×</button></div>
     <div class="modal-actions">
       <label class="modal-btn" style="cursor:pointer">📂 開く（ファイルを選択）<input type="file" id="modal-file" accept=".json" style="display:none"></label>
       <button class="modal-btn primary" id="modal-download">💾 保存する（.jsonファイル）</button>
@@ -191,16 +188,11 @@ h2.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,
   </div>
 </div>
 
-<!-- Help modal -->
-<div class="modal-bg" id="help-modal">
+<!-- Chord Guide modal -->
+<div class="modal-bg" id="chord-guide-modal">
   <div class="help-box">
-    <div class="modal-hdr">
-      <span class="modal-title">コード入力ガイド</span>
-      <button class="modal-close" id="help-close">×</button>
-    </div>
-
-    <div>
-      <div class="help-section-title">表記ゆれ対応</div>
+    <div class="modal-hdr"><span class="modal-title">🎵 コード表記ガイド</span><button class="modal-close" id="chord-guide-close">×</button></div>
+    <div><div class="help-section-title">表記ゆれ対応</div>
       <table class="help-table">
         <tr><td>フラット</td><td>♭ または b（例：B♭m7 = Bbm7）</td></tr>
         <tr><td>シャープ</td><td>♯ または #（例：F♯m7 = F#m7）</td></tr>
@@ -208,11 +200,9 @@ h2.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,
         <tr><td>マイナー</td><td>m / min / -（例：Dm7 = Dmin7 = D-7）</td></tr>
       </table>
     </div>
-
-    <div>
-      <div class="help-section-title">基本コード</div>
+    <div><div class="help-section-title">基本コード</div>
       <table class="help-table">
-        <tr><td>C</td><td>メジャートライアド（ド・ミ・ソ）</td></tr>
+        <tr><td>C</td><td>メジャートライアド（ど・ミ・ソ）</td></tr>
         <tr><td>Cm</td><td>マイナートライアド</td></tr>
         <tr><td>C7</td><td>ドミナント7th</td></tr>
         <tr><td>CM7</td><td>メジャー7th</td></tr>
@@ -226,9 +216,7 @@ h2.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,
         <tr><td>C6 / Cm6</td><td>6th</td></tr>
       </table>
     </div>
-
-    <div>
-      <div class="help-section-title">テンションコード</div>
+    <div><div class="help-section-title">テンションコード</div>
       <table class="help-table">
         <tr><td>C9 / CM9 / Cm9</td><td>9thコード</td></tr>
         <tr><td>C11 / Cm11</td><td>11thコード</td></tr>
@@ -238,21 +226,68 @@ h2.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,
         <tr><td>Cadd9</td><td>7thなしで9thを追加</td></tr>
       </table>
     </div>
-
-    <div>
-      <div class="help-section-title">分数コード（スラッシュコード）</div>
+    <div><div class="help-section-title">分数コード（スラッシュコード）</div>
       <table class="help-table">
         <tr><td>C/E</td><td>Cコード・ベース音E（第1転回形）</td></tr>
-        <tr><td>G/B</td><td>Gコード・ベース音B（第1転回形）</td></tr>
+        <tr><td>G/B</td><td>Gコード・ベース音B</td></tr>
         <tr><td>Am7/G</td><td>テンション付き分数コードも可</td></tr>
       </table>
     </div>
+  </div>
+</div>
 
+<!-- Help / Guide modal -->
+<div class="modal-bg" id="help-modal">
+  <div class="help-box">
+    <div class="modal-hdr"><span class="modal-title">📘 操作ガイド</span><button class="modal-close" id="help-close">×</button></div>
+    <div><div class="help-section-title">基本操作</div>
+      <table class="help-table">
+        <tr><td>ブロックをタップ</td><td>再生スタート位置を選択（▶ start 表示）</td></tr>
+        <tr><td>選択後に ✎ をタップ</td><td>コード名を編集（キーボード表示）</td></tr>
+        <tr><td>⋮ をドラッグ</td><td>コードブロックの拍数を変更</td></tr>
+        <tr><td>＋ をタップ</td><td>小節内にコードを追加</td></tr>
+        <tr><td>× をタップ</td><td>コードブロックを削除</td></tr>
+      </table>
+    </div>
+    <div><div class="help-section-title">複数選択（コピー＆ペースト）</div>
+      <table class="help-table">
+        <tr><td>長押し（iPad）</td><td>複数選択モード開始・バイブあり</td></tr>
+        <tr><td>Shift+クリック（PC）</td><td>複数選択に追加</td></tr>
+        <tr><td>選択中ブロックを長押し</td><td>複数選択を解除</td></tr>
+        <tr><td>コピーボタン</td><td>選択中のブロックをコピー</td></tr>
+        <tr><td>ペーストボタン</td><td>選択位置の後ろに貼り付け・自動解除</td></tr>
+        <tr><td>Ctrl+C / Ctrl+V（PC）</td><td>コピー・ペースト</td></tr>
+      </table>
+    </div>
+    <div><div class="help-section-title">再生</div>
+      <table class="help-table">
+        <tr><td>Play ボタン</td><td>選択ブロックから再生開始</td></tr>
+        <tr><td>Loop ボタン</td><td>オンにすると繰り返し再生</td></tr>
+        <tr><td>BPM</td><td>テンポを数値で入力</td></tr>
+        <tr><td>拍子</td><td>分子＝拍数、分母＝音符の長さ（4/4、6/8など）</td></tr>
+      </table>
+    </div>
+    <div><div class="help-section-title">編集</div>
+      <table class="help-table">
+        <tr><td>↩ Undo / ↪ Redo</td><td>操作を元に戻す・やり直す（Ctrl+Z/Y）</td></tr>
+        <tr><td>＋ 小節を追加</td><td>選択ブロックの後ろに新しい小節を挿入</td></tr>
+        <tr><td>Del ボタン</td><td>小節を削除</td></tr>
+      </table>
+    </div>
+    <div><div class="help-section-title">保存・読み込み</div>
+      <table class="help-table">
+        <tr><td>Load/Save → 開く</td><td>.jsonファイルを選択して読み込む</td></tr>
+        <tr><td>Load/Save → 保存</td><td>現在のシーケンスを.jsonファイルで保存</td></tr>
+      </table>
+    </div>
   </div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
 <script>
+// すべてのDOM参照をDOMContentLoaded後に行う
+document.addEventListener('DOMContentLoaded',()=>{
+
 const scoreEl=document.getElementById('score');
 const mainEl=document.getElementById('main');
 const bpmEl=document.getElementById('bpm');
@@ -282,11 +317,7 @@ let longPressTimer=null;
 
 // ---- undo/redo ----
 const undoStack=[],redoStack=[];
-function snapshot(){
-  undoStack.push(JSON.stringify(measures));
-  if(undoStack.length>100)undoStack.shift();
-  redoStack.length=0;updateUndoUI();
-}
+function snapshot(){undoStack.push(JSON.stringify(measures));if(undoStack.length>100)undoStack.shift();redoStack.length=0;updateUndoUI();}
 function updateUndoUI(){undoBtn.disabled=undoStack.length===0;redoBtn.disabled=redoStack.length===0;}
 function undo(){if(!undoStack.length)return;redoStack.push(JSON.stringify(measures));measures=JSON.parse(undoStack.pop());clampSelection();render();updateUndoUI();}
 function redo(){if(!redoStack.length)return;undoStack.push(JSON.stringify(measures));measures=JSON.parse(redoStack.pop());clampSelection();render();updateUndoUI();}
@@ -322,6 +353,36 @@ function updateSelInfo(){
 }
 function allSlots(){const out=[];measures.forEach((m,mi)=>m.slots.forEach((sl,si)=>out.push({mi,si,sl})));return out;}
 
+// ---- selection ----
+function setSelected(mi,si,addToMulti){
+  if(addToMulti){
+    if(isMultiSelected(mi,si)){
+      multiSel=multiSel.filter(x=>!(x.mi===mi&&x.si===si));
+      if(multiSel.length===1){multiSel=[];multiSelectMode=false;selectedMi=mi;selectedSi=si;}
+    }else{
+      if(multiSel.length===0&&!isMultiSelected(selectedMi,selectedSi))multiSel.push({mi:selectedMi,si:selectedSi});
+      multiSel.push({mi,si});
+    }
+  }else{multiSelectMode=false;clearMultiSel();selectedMi=mi;selectedSi=si;}
+  updateSelInfo();refreshSelectionUI();
+}
+function enterMultiSelectMode(mi,si){
+  if(multiSelectMode&&isMultiSelected(mi,si)){exitMultiSelectMode();selectedMi=mi;selectedSi=si;refreshSelectionUI();return;}
+  multiSelectMode=true;
+  multiSel=[];
+  if(!(selectedMi===mi&&selectedSi===si))multiSel.push({mi:selectedMi,si:selectedSi});
+  multiSel.push({mi,si});
+  selectedMi=mi;selectedSi=si;
+  updateSelInfo();refreshSelectionUI();
+  if(navigator.vibrate)navigator.vibrate(40);
+}
+function exitMultiSelectMode(){multiSelectMode=false;clearMultiSel();refreshSelectionUI();}
+function refreshSelectionUI(){
+  document.querySelectorAll('.cblock.selected,.cblock.multi-selected').forEach(e=>e.classList.remove('selected','multi-selected'));
+  multiSel.forEach(({mi,si})=>document.getElementById(`b${mi}_${si}`)?.classList.add('multi-selected'));
+  if(multiSel.length===0)document.getElementById(`b${selectedMi}_${selectedSi}`)?.classList.add('selected');
+}
+
 // ---- copy/paste ----
 function doCopy(){
   const toCopy=multiSel.length>1?multiSel:[{mi:selectedMi,si:selectedSi}];
@@ -344,16 +405,11 @@ function doPaste(){
     let inserted=false;
     for(let mi=insertMi;mi<measures.length;mi++){
       const free=mb-usedB(mi);
-      if(free>=slot.dur){
-        const idx=mi===insertMi?insertSi+1:measures[mi].slots.length;
-        measures[mi].slots.splice(idx,0,{chord:slot.chord,dur:Math.min(slot.dur,free)});
-        insertMi=mi;insertSi=idx;inserted=true;break;
-      }
+      if(free>=slot.dur){const idx=mi===insertMi?insertSi+1:measures[mi].slots.length;measures[mi].slots.splice(idx,0,{chord:slot.chord,dur:Math.min(slot.dur,free)});insertMi=mi;insertSi=idx;inserted=true;break;}
     }
     if(!inserted){measures.push({slots:[{chord:slot.chord,dur:Math.min(slot.dur,mb)}]});insertMi=measures.length-1;insertSi=0;}
   });
-  exitMultiSelectMode();
-  render();
+  exitMultiSelectMode();render();
 }
 copyBtn.addEventListener('click',doCopy);
 pasteBtn.addEventListener('click',doPaste);
@@ -363,28 +419,6 @@ document.addEventListener('keydown',e=>{
   if((e.ctrlKey||e.metaKey)&&e.key==='c'){e.preventDefault();doCopy();}
   if((e.ctrlKey||e.metaKey)&&e.key==='v'){e.preventDefault();doPaste();}
 });
-
-// ---- selection ----
-function setSelected(mi,si,shiftKey){
-  if(shiftKey||multiSelectMode){
-    if(isMultiSelected(mi,si)){multiSel=multiSel.filter(x=>!(x.mi===mi&&x.si===si));}
-    else{if(!isMultiSelected(selectedMi,selectedSi))multiSel.push({mi:selectedMi,si:selectedSi});multiSel.push({mi,si});}
-    if(multiSel.length===0)multiSelectMode=false;
-  }else{clearMultiSel();selectedMi=mi;selectedSi=si;}
-  updateSelInfo();refreshSelectionUI();
-}
-function enterMultiSelectMode(mi,si){
-  multiSelectMode=true;
-  if(!isMultiSelected(mi,si)){if(!isMultiSelected(selectedMi,selectedSi))multiSel.push({mi:selectedMi,si:selectedSi});multiSel.push({mi,si});}
-  updateSelInfo();refreshSelectionUI();
-  if(navigator.vibrate)navigator.vibrate(40);
-}
-function exitMultiSelectMode(){multiSelectMode=false;clearMultiSel();refreshSelectionUI();}
-function refreshSelectionUI(){
-  document.querySelectorAll('.cblock.selected,.cblock.multi-selected').forEach(e=>e.classList.remove('selected','multi-selected'));
-  multiSel.forEach(({mi,si})=>document.getElementById(`b${mi}_${si}`)?.classList.add('multi-selected'));
-  if(multiSel.length===0)document.getElementById(`b${selectedMi}_${selectedSi}`)?.classList.add('selected');
-}
 
 // ---- Piano ----
 const P_START=24,P_END=107;
@@ -458,14 +492,14 @@ function buildSynth(){
   reverb=reverb||new Tone.Reverb({decay:1.4,wet:0.22}).toDestination();
   const t=timbreEl.value;
   const poly=(opt,vol=-6)=>new Tone.PolySynth(Tone.Synth,{...opt,volume:vol}).connect(reverb);
-  if(t==='piano') synth=poly({oscillator:{type:'triangle'},envelope:{attack:0.005,decay:0.3,sustain:0.25,release:1.0}});
-  else if(t==='ep') synth=poly({oscillator:{type:'fmsine',modulationType:'triangle',harmonicity:3,modulationIndex:8},envelope:{attack:0.005,decay:0.4,sustain:0.15,release:0.8}},-8);
-  else if(t==='organ') synth=poly({oscillator:{type:'square'},envelope:{attack:0.01,decay:0.01,sustain:1.0,release:0.05}},-12);
-  else if(t==='pad') synth=poly({oscillator:{type:'sawtooth'},envelope:{attack:0.4,decay:0.2,sustain:0.8,release:1.5}},-10);
-  else if(t==='pluck') synth=poly({oscillator:{type:'triangle'},envelope:{attack:0.001,decay:0.3,sustain:0.0,release:0.3}},-6);
-  else if(t==='vibraphone') synth=poly({oscillator:{type:'sine'},envelope:{attack:0.003,decay:0.8,sustain:0.1,release:1.2}},-6);
-  else if(t==='brass') synth=poly({oscillator:{type:'sawtooth'},envelope:{attack:0.08,decay:0.1,sustain:0.9,release:0.2}},-9);
-  else if(t==='bass') synth=poly({oscillator:{type:'triangle'},envelope:{attack:0.005,decay:0.2,sustain:0.6,release:0.3}},-4);
+  if(t==='piano')synth=poly({oscillator:{type:'triangle'},envelope:{attack:0.005,decay:0.3,sustain:0.25,release:1.0}});
+  else if(t==='ep')synth=poly({oscillator:{type:'fmsine',modulationType:'triangle',harmonicity:3,modulationIndex:8},envelope:{attack:0.005,decay:0.4,sustain:0.15,release:0.8}},-8);
+  else if(t==='organ')synth=poly({oscillator:{type:'square'},envelope:{attack:0.01,decay:0.01,sustain:1.0,release:0.05}},-12);
+  else if(t==='pad')synth=poly({oscillator:{type:'sawtooth'},envelope:{attack:0.4,decay:0.2,sustain:0.8,release:1.5}},-10);
+  else if(t==='pluck')synth=poly({oscillator:{type:'triangle'},envelope:{attack:0.001,decay:0.3,sustain:0.0,release:0.3}},-6);
+  else if(t==='vibraphone')synth=poly({oscillator:{type:'sine'},envelope:{attack:0.003,decay:0.8,sustain:0.1,release:1.2}},-6);
+  else if(t==='brass')synth=poly({oscillator:{type:'sawtooth'},envelope:{attack:0.08,decay:0.1,sustain:0.9,release:0.2}},-9);
+  else if(t==='bass')synth=poly({oscillator:{type:'triangle'},envelope:{attack:0.005,decay:0.2,sustain:0.6,release:0.3}},-4);
   else synth=poly({oscillator:{type:'sawtooth'},envelope:{attack:0.01,decay:0.1,sustain:0.6,release:0.4}},-10);
 }
 timbreEl.addEventListener('change',buildSynth);
@@ -540,35 +574,21 @@ function makeBlock(mi,si,mb,measEl){
   const inner=document.createElement('div');inner.className='cinner';
   const inp=document.createElement('input');
   inp.type='text';inp.className='cinp';inp.placeholder='C';inp.value=slot.chord||'';
-  // inputは直接タップ不可（✎ボタン経由のみ）
-  inp.readOnly=true;
-  inp.style.cursor='default';
+  inp.readOnly=true;inp.style.cursor='default';
   inp.addEventListener('input',e=>{measures[mi].slots[si].chord=e.target.value;blk.classList.toggle('err',e.target.value.trim()!==''&&!parseChord(e.target.value));});
   inp.addEventListener('change',()=>snapshot());
   inp.addEventListener('mousedown',e=>e.stopPropagation());
-  inp.addEventListener('blur',()=>{
-    inp.readOnly=true;
-    inp.style.cursor='default';
-    blk.classList.remove('editing');
-  });
+  inp.addEventListener('blur',()=>{inp.readOnly=true;inp.style.cursor='default';blk.classList.remove('editing');});
   const dl=document.createElement('div');dl.className='dlbl';dl.id=`dl${mi}_${si}`;dl.textContent=`${slot.dur}/${getDen()}`;
   inner.appendChild(inp);inner.appendChild(dl);blk.appendChild(inner);
-
-  // 編集ボタン（✎）
   const pencil=document.createElement('button');
-  pencil.className='edit-pencil';
-  pencil.innerHTML='✎';
-  pencil.title='コードを編集';
+  pencil.className='edit-pencil';pencil.innerHTML='✎';pencil.title='コードを編集';
   pencil.addEventListener('mousedown',e=>e.stopPropagation());
   pencil.addEventListener('touchstart',e=>e.stopPropagation(),{passive:true});
   pencil.addEventListener('click',e=>{
     e.stopPropagation();
     if(multiSelectMode)return;
-    inp.readOnly=false;
-    inp.style.cursor='text';
-    blk.classList.add('editing');
-    inp.focus();
-    inp.select();
+    inp.readOnly=false;inp.style.cursor='text';blk.classList.add('editing');inp.focus();inp.select();
   });
   blk.appendChild(pencil);
   blk.addEventListener('mousedown',e=>{if(e.target!==inp)setSelected(mi,si,e.shiftKey);});
@@ -578,11 +598,7 @@ function makeBlock(mi,si,mb,measEl){
   },{passive:true});
   blk.addEventListener('touchend',e=>{
     if(e.target===inp||e.target.classList.contains('rhandle')||e.target.classList.contains('cdel')||e.target.classList.contains('edit-pencil'))return;
-    if(longPressTimer){
-      clearTimeout(longPressTimer);longPressTimer=null;
-      // multiSelectMode中はタップ=追加選択、それ以外は通常選択
-      setSelected(mi,si,multiSelectMode);
-    }
+    if(longPressTimer){clearTimeout(longPressTimer);longPressTimer=null;setSelected(mi,si,multiSelectMode);}
   },{passive:true});
   blk.addEventListener('touchmove',()=>{if(longPressTimer){clearTimeout(longPressTimer);longPressTimer=null;}},{passive:true});
   if(measures[mi].slots.length>1){
@@ -629,11 +645,8 @@ function refreshAddBtn(mi,mb,measEl){
   ab.onclick=()=>{snapshot();const u=usedB(mi),f=maxB()-u;if(f<=0)return;measures[mi].slots.push({chord:'',dur:f});render();setTimeout(()=>{const all=document.querySelectorAll(`#m${mi} .cinp`);if(all.length)all[all.length-1].focus();},30);};
 }
 document.getElementById('add-meas').addEventListener('click',()=>{
-  snapshot();
-  measures.splice(selectedMi+1,0,{slots:[{chord:'',dur:maxB()}]});
-  selectedMi=selectedMi+1;selectedSi=0;
-  render();
-  setTimeout(()=>document.getElementById(`m${selectedMi}`)?.scrollIntoView({behavior:'smooth',block:'nearest'}),50);
+  snapshot();measures.splice(selectedMi+1,0,{slots:[{chord:'',dur:maxB()}]});selectedMi=selectedMi+1;selectedSi=0;
+  render();setTimeout(()=>document.getElementById(`m${selectedMi}`)?.scrollIntoView({behavior:'smooth',block:'nearest'}),50);
 });
 
 // ---- playback ----
@@ -670,15 +683,10 @@ playBtn.addEventListener('click',()=>isPlaying?stopPlay():startPlay());
 // ---- Save/Load ----
 function getJson(){return JSON.stringify({version:2,bpm:parseInt(bpmEl.value)||80,tsNum:getNum(),tsDen:getDen(),timbre:timbreEl.value,voicing:voicingEl.value,style:styleEl.value,measures:measures.map(m=>({slots:m.slots.map(s=>({chord:s.chord,dur:s.dur}))}))},null,2);}
 function loadData(data){
-  if(data.bpm)bpmEl.value=data.bpm;
-  if(data.tsNum)tsNum.value=data.tsNum;
-  if(data.tsDen)tsDen.value=data.tsDen;
-  if(data.timbre)timbreEl.value=data.timbre;
-  if(data.voicing)voicingEl.value=data.voicing;
-  if(data.style)styleEl.value=data.style;
+  if(data.bpm)bpmEl.value=data.bpm;if(data.tsNum)tsNum.value=data.tsNum;if(data.tsDen)tsDen.value=data.tsDen;
+  if(data.timbre)timbreEl.value=data.timbre;if(data.voicing)voicingEl.value=data.voicing;if(data.style)styleEl.value=data.style;
   if(data.measures)measures=data.measures.map(m=>({slots:m.slots.map(s=>({chord:s.chord||'',dur:s.dur||1}))}));
-  selectedMi=0;selectedSi=0;clearMultiSel();
-  undoStack.length=0;redoStack.length=0;updateUndoUI();render();
+  selectedMi=0;selectedSi=0;clearMultiSel();undoStack.length=0;redoStack.length=0;updateUndoUI();render();
 }
 const modal=document.getElementById('modal');
 document.getElementById('save-btn').addEventListener('click',()=>modal.classList.add('open'));
@@ -689,26 +697,24 @@ function doDownload(){
   if(lastBlobUrl)URL.revokeObjectURL(lastBlobUrl);
   const blob=new Blob([getJson()],{type:'application/json'});
   lastBlobUrl=URL.createObjectURL(blob);
-  const a=document.createElement('a');
-  a.href=lastBlobUrl;a.download='chord-sequence.json';
+  const a=document.createElement('a');a.href=lastBlobUrl;a.download='chord-sequence.json';
   document.body.appendChild(a);a.click();document.body.removeChild(a);
-  const retryEl=document.getElementById('modal-retry');
-  // 少し待ってブロックされてたら「もう一度試す」を表示
-  setTimeout(()=>{
-    try{if(lastBlobUrl)retryEl.style.display='block';}catch(e){}
-  },500);
+  setTimeout(()=>{const r=document.getElementById('modal-retry');if(r)r.style.display='block';},500);
 }
-document.getElementById('modal-download').addEventListener('click',()=>{
-  document.getElementById('modal-retry').style.display='none';
-  doDownload();
-});
-document.getElementById('modal-retry-btn').addEventListener('click',()=>doDownload());
+document.getElementById('modal-download').addEventListener('click',()=>{document.getElementById('modal-retry').style.display='none';doDownload();});
+document.getElementById('modal-retry-btn').addEventListener('click',doDownload);
 document.getElementById('modal-file').addEventListener('change',e=>{
   const file=e.target.files[0];if(!file)return;
   const reader=new FileReader();
   reader.onload=ev=>{try{loadData(JSON.parse(ev.target.result));modal.classList.remove('open');}catch(e){alert('ファイルの読み込みに失敗しました');}e.target.value='';};
   reader.readAsText(file);
 });
+
+// ---- Chord Guide ----
+const chordGuideModal=document.getElementById('chord-guide-modal');
+document.getElementById('chord-guide-btn').addEventListener('click',()=>chordGuideModal.classList.add('open'));
+document.getElementById('chord-guide-close').addEventListener('click',()=>chordGuideModal.classList.remove('open'));
+chordGuideModal.addEventListener('click',e=>{if(e.target===chordGuideModal)chordGuideModal.classList.remove('open');});
 
 // ---- Help ----
 const helpModal=document.getElementById('help-modal');
@@ -717,12 +723,14 @@ document.getElementById('help-close').addEventListener('click',()=>helpModal.cla
 helpModal.addEventListener('click',e=>{if(e.target===helpModal)helpModal.classList.remove('open');});
 
 // ---- touch deselect ----
-document.getElementById('main').addEventListener('touchend',e=>{
-  if(e.target===scoreEl||e.target===document.getElementById('main')){if(multiSelectMode)exitMultiSelectMode();}
+mainEl.addEventListener('touchend',e=>{
+  if(e.target===scoreEl||e.target===mainEl){if(multiSelectMode)exitMultiSelectMode();}
 });
 
 render();
 setTimeout(buildPiano,100);
+
+}); // end DOMContentLoaded
 </script>
 </body>
 </html>
